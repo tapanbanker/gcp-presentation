@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="en">
+
+
+<!-- Mirrored from aws2012-claytondev.rhcloud.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 14 Jan 2018 04:02:40 GMT -->
+<head>
+<style type="text/css">
+
+div.color { color:white; }
+
+</style>
+<meta charset="utf-8">
+
+<title>Google CLoud Platform - Getting Started</title>
+
+<meta name="description" content="Google Cloud Platform - Tapan Banker">
+<meta name="author" content="Steven Citron-Pousty, Matt Hicks, Clayton Coleman">
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<link rel="stylesheet" href="css/reveal.css">
+<link rel="stylesheet" href="css/theme/redhat.css" id="theme">
+
+<!-- For syntax highlighting -->
+<link rel="stylesheet" href="lib/css/zenburn.css">
+
+<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+<script>
+document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+</script>
+
+<!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+
+  <div class="slides">
+
+    <section>
+
+      <img src="pics/tapan-banker-1.png" alt="simple stack picture" />
+    </section>
+
+    <section>
+      <h3>Agenda</h3>
+      <ul>
+        <p class="fragment roll-in">Learn some about PaaS</p>
+        <p class="fragment roll-in">Learn about OpenShift Online</p>
+        <p class="fragment roll-in">Write and Deploy some code for Online</p>
+        <p class="fragment roll-in">Move on to Bringing up the PaaS on AWS</p>
+      </ul>
+    </section>
+
+    <section>
+      <h3>Assumptions</h3>
+      <ul>
+        <p class="fragment roll-in">You can write some code</p>
+        <p class="fragment roll-in">You have a laptop</p>
+        <p class="fragment roll-in">You will ask questions</p>
+        <p class="fragment roll-in">You are hoping this will be fun!</p>
+      </ul>
+    </section>
+
+    <section>
+      <h3> What is OpenShift? </h3>
+      <h4> Kinda' like Amazon right?</h4>
+      <img src="pics/scp_simpleStackLabeled.png" alt="simple stack picture" />
+    </section>
+
+    <section>
+      <img class="background" src="pics/scp_gearsCartridge.png" alt="cartridge and gears" />
+    </section>
+
+    <section>
+      <img class="background" src="pics/scp_completeStack.png" alt="all things in the public stack" />
+    </section>
+
+    <section>
+      <img class="background" src="pics/scp_awesomeSauce.jpg" alt="awesome sauce" />
+      <p style="position: absolute; bottom: 6px; font-size: 20px;">Cook24v on Flickr</p>
+    </section>
+
+    <section>
+      <h4>Ok what else do I get and what is the catch for OpenShift online ?</h4>
+      <ul>
+        <li>The Catch is we are in developer preview right now for OpenShift Online</li>
+        <li>Three gears – each one is half a gig of RAM, and 1 gig of disk (always free)</li>
+        <li>Need more resources, just ask!</li>
+        <li>OpenShift is free-as-in-beer AND <strong>free-as-in-freedom</strong> </li>        		
+      </ul>
+    </section>
+
+    <section>
+      <img class="background" src="pics/scp_blahBlah.png" alt="too much talk not enough code" />
+      <h4 class="spoken invert">"Too much talky talky not enough code!"</h4>
+      <!--fix -->
+      <p style="position: absolute; bottom: 6px; font-size: 20px;">Dalbera on Flickr</p>
+    </section>
+
+    <section>
+      <h2 class="middle">Let's make an app</h2>
+    </section>
+
+    <section>
+      <h2 class="top">Prerequisites</h2>
+          <ol>
+            <li><a href="https://openshift.redhat.com/app/account/new">create account</a></li>
+            <li><a href="https://openshift.redhat.com/community/get-started">install client tools</a> </li>
+            <li>Run <em>rhc setup</em></li>  
+            <li>Make your namespace now</li>
+          </ol>
+      <p style="margin-top: 80px;">In case you want to get back here.... <a href="index.html">http://aws2012-claytondev.rhcloud.com</a></p>
+    </section>
+
+    <section>
+      <h2 class="top">Let's make a python app</h2>
+      <ol>
+        <li>cd to a directory where you want to have your code live</li>
+        <li>Do the following command <em>rhc app create pythonrox python-2.6</em></li>
+        <li>cd into pythonrox</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2 class="middle">Short diversion into git</h2>
+    </section>
+    
+    <section>
+        <h3 class="top">Git</h3>
+        <p class="fragment roll-in">Distributed Version control</p>
+        <p class="fragment roll-in">A local repository – on your laptop</p>
+        <p class="fragment roll-in">A remote repository – on some other machine,like your gear</p>
+    </section>
+    
+    <section>
+        <h3 class="top">What happens on your local machine</h3>
+        <img src="pics/scp_gitFlow.png" alt="simple git flow" />
+    </section>
+    
+    <section>
+        <h3 class="top">What you do with Remote Repositories</h3>
+        <p><strong>Clone</strong>: take a remote repository and bring it local</p>
+        <p><strong>Push</strong>: push your local changes back up to a remote
+    </section>
+    
+    <section>
+        <h3 clas="top">The 3 git commands you need to know to work with OpenShift</h3>
+        <ol>
+            <li>Git add . (means add all news files as being tracked in the local repository) </li>
+            <li>Git commit –am “your message” (means commit all my changes to the local repository with this message)</li>
+            <li>Git push (means push from your local repository to the repository on your OpenShift gear)</li>
+    </section>
+
+    
+    <section>
+      <h3 class="top">Let's change our app</h3>
+      <p>cd into the wsgi folder and open the file titled "application" for editing</p>
+      <p>Change the text inside the h1 tag</p>
+      <p>Save your changes</p>
+      <p>Now do the git commit and git push commands from the previous slide</p>
+      <p>Reload your web page and win!</p>
+    </section>
+
+    <section>
+      <h2 class="middle">Using Github and quickstarts</h2>
+    </section>
+    
+    <section>
+        <h4 class="top">Github - <a href="http://www.github.com/">www.github.com</a></h4>
+        <p>Publicly hosted git repositories (private if you pay )</p>
+        <p>You care about it because:</p>
+        <ol>
+            <li>We have quickstarts there </li> 
+            <li>You can put your projects there for backup </li>
+        </ol>
+        <!--FIX -->
+        <img src="pics/scp_octoCat.png" alt="octo cat" />
+    </section>
+
+    <section>
+        <h4 class="top">Make our Python app a flask application</h4>
+        <p>Go to our <a href="https://github.com/openshift/flask-example">flask quickstart</a></p>
+        <p>Follow the instructions for after you have created an application</p>
+        <p>Modify the code in <em>myflaskapp.py</em> to return a different string for the base url ("/") </p>
+        <p>Do the git commit and push from before</p>
+    </section>
+    
+    <section>
+      <h3 class="top">Add postgresql DB - but using in code beyond the scope</h3>
+      <p>Adding a database is as simple as:</p>
+      <p><em>rhc cartridge add postgresql-8,4 --app pythonrox</em></p>
+    </section>
+
+    <section>
+      <h3 style="margin-top: 150px">Now let's SSH in and show environment variables and using DB</h3>
+    </section>
+
+    <section>
+      <h2 class="top">All Done!</h2>
+      <ol>
+        <li>Easy to get apps running in the cloud</li>
+        <li>Good for devs - they don't have to call ops or manage servers</li>
+        <li>Good for ops - they don't have to deal with developers</li>
+        <li>Come join us</li>
+        <li>Hope this was fun!</li>
+      </ol>
+    </section>
+
+    <!-- End of Steve's stuff -->
+
+    <section>
+      <img class="background" src="pics/clouds.jpg" />
+      <h2 class="invert middle">Introducing...</h2>
+    </section>
+
+    <section>
+      <img class="background" src="pics/shadowman.jpg" />
+      <h2 class="invert middle">OpenShift Enterprise</h2>
+    </section>
+
+    <section>
+      <h3 style="margin-top: 150px">When would I use OpenShift Origin versus OpenShift Enterprise?</h3>
+    </section>
+
+    <section>
+      <h2 class="middle">Let's talk CloudFormations</h2>
+    </section>
+
+    <section>
+      <h2>Not just for Amazon</h2>
+      <ul>
+        <li>CloudFormation templates work on OpenStack</li>
+        <li>Heat - <a href="http://heat-api.org/">http://heat-api.org/</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h1 class="comic middle">Show Me!</h1>
+    </section>
+
+    <section>
+      <h2 class="middle">Now what are we building?</h2>
+    </section>
+
+    <section>
+      <h2>Main Components</h2>
+      <img class="noshadow" src="pics/topology.png" />
+    </section>
+
+    <section>
+      <h2 class="middle">Which AMI do I use?</h2>
+    </section>
+
+    <section>
+      <h2>Cloud-Init Pattern</h2>
+      <p>Use a standard image and kickstart it to the correct setup on instantiation</p><br />
+      <ol>
+        <li class="fragment roll-in">Start with RHEL Hourly</li>
+        <li class="fragment roll-in">Pass in script via UserData</li>
+        <li class="fragment roll-in">Run script on startup</li>
+        <li class="fragment roll-in">Notify on script completion</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>For Later</h2>
+      <ul>
+        <p>Discussion Thread - <a href="http://bit.ly/V2LoQr">http://bit.ly/V2LoQr</a></p>
+        <p>ec2-run-user-data script - <a href="http://bit.ly/UXBIkr">http://bit.ly/UXBIkr</a></p>
+      </ul>
+    </section>
+
+    <section>
+      <img class="background noshadow" src="pics/courage-wolf.jpg" />
+      <h2 class="comic">Warning!</h2>
+      <h2 class="comic" style="margin-top: 350px">Crazy JSON ahead...</h2>
+    </section>
+
+    <section>
+      <h2>User Data Script</h2>
+<pre><code>"AWSTemplateFormatVersion" : "2010-09-09",
+"Description": "OpenShift CloudFormation Setup",
+"BrokerInstance" : {
+  "Type" : "AWS::EC2::Instance",
+  "Properties" : {
+    ...
+    "UserData" : { "Fn::Base64" : { "Fn::Join" : ["",[
+        "#!/bin/bash -x","\n",
+        "YOUR SCRIPT HERE","\n"
+    ]]}}
+  }
+}
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Kickstarts</h2>
+      <ul>
+        <p>Community Kickstart - <a href="http://bit.ly/WogU6F">http://bit.ly/WogU6F</a></p>
+        <p>Enterprise Kickstart - Available w/ Evaluation</p>
+        <p>Convert to script:</p>
+        <pre><code>sed -e '0,/^%post/d;/^%end/,$$d' openshift.ks > openshift-amz.sh</code></pre>
+        <p>Add callback section to end</p>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Script w/ Kickstart</h2>
+<pre><code>"UserData" : { "Fn::Base64" : { "Fn::Join" : ["",[
+  "#!/bin/bash -x","\n",
+  "cd ~/","\n",
+  "wget http://SOME_HOST/openshift-amz.sh","\n",
+  "export CONF_INSTALL_COMPONENTS='broker'","\n",
+  "sh openshift-amz.sh","\n"
+]]}}
+</code></pre>
+      <ol>
+        <li class="fragment roll-in">Download kickstart script</li>
+        <li class="fragment roll-in">Set components to kickstart</li>
+        <li class="fragment roll-in">Run kickstart script</li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>Wait / Callback Addition</h3>
+      <p>Allows for each instance to complete before continuing</p>
+<pre><code># Script: openshift-amz.sh PARAM1 PARAM2
+# Parameter 1: Unique callback ID
+# Parameter 2: Unique callback URL
+
+... # Kickstart content
+
+cat <<EOF > /tmp/success_data
+{
+  "Status" : "SUCCESS",
+  "Reason" : "Configuration Complete",
+  "UniqueId" : "$1",
+  "Data" : "Component has completed configuration."
+}
+EOF
+
+curl -T /tmp/success_data $2
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Template Waits</h2>
+<pre><code>"WaitForBroker" : {
+  "Type" : "AWS::CloudFormation::WaitCondition",
+  "DependsOn" : "BrokerInstance",
+  "Properties" : {
+    "Handle" : {"Ref" : "BrokerWaitForInstanceWaitHandle"},
+    "Timeout" : "600"
+  }
+},
+"BrokerWaitForInstanceWaitHandle" : {
+  "Type" : "AWS::CloudFormation::WaitConditionHandle",
+  "Properties" : {}
+}
+</code></pre>
+    </section>
+
+    <section>
+      <h2>Script w/ Callback</h2>
+<pre><code>"UserData" : { "Fn::Base64" : { "Fn::Join" : ["",[
+  "#!/bin/bash -x","\n",
+  "cd ~/","\n",
+  "wget http://SOME_HOST/openshift-amz.sh","\n",
+  "export CONF_INSTALL_COMPONENTS='broker'","\n",
+  "sh openshift-amz.sh 'BROKER_ID' '", {"Ref" : "BrokerWaitForInstanceWaitHandle"} ,"'", "\n"
+]]}}
+</code></pre>
+      <ul>
+        <p>Same approach as before but now pass in parameters to kickstart script with unique id and reference to wait handle</p>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Rinse, repeat...</h2>
+      <ul>
+        <p>Kickstart broker, node, datastore, messaging, ns1</p>
+        <p>Community Instructions - <a href="http://red.ht/IxMQnd">http://red.ht/IxMQnd</a></p>
+        <p>Enterprise Instructions - Available w/ Evaluation</p>
+      </ul>
+    </section>
+
+    <section>
+      <h2>DNS Setup</h2>
+      <ul>
+        <li class="fragment roll-in">Primary components in Route 53 DNS</li>
+        <li class="fragment roll-in">e.g. broker, node, ns1, etc.</li>
+        <li class="fragment roll-in">Application subdomain delegated to ns1</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>DNS Template</h2>
+<pre><code>"BrokerDNSRecord" : {
+  "Type" : "AWS::Route53::RecordSet",
+  "Properties" : {
+    "HostedZoneName" : { "mydomain.com." },
+    "Comment" : "Broker DNS Name",
+    "Name" : { "broker.mydomain.com." },
+    "Type" : "A",
+    "TTL" : "600",
+    "ResourceRecords" : [ {"Fn::GetAtt" : [ "BrokerInstance", "PublicIp" ]} ]
+  }
+},
+
+</code></pre>
+    <p>Creates an A record using the instance public ip</p>
+    </section>
+
+    <!-- End of Matt's stuff -->
+
+        <section>
+          <h3 class="">Public to Private</h3>
+        	<p>In 2 commands</p>
+          <div class="fragment">
+          	<p>Well, 3</p>
+            <pre><code>LIBRA_SERVER=broker.amz.cloudydemo.com rhc setup
+rhc app create pythonrox python-2.6
+rhc snapshot restore pythonrox</code></pre>
+          </div>
+          <div class="fragment">
+            <p>Hit <a href="http://pythonrox-mydomain.apps.amz.cloudydemo.com/">pythonrox-mydomain.apps.amz.cloudydemo.com</a></p>
+            <p>SSH to <a href="pythonrox-mydomain.apps.amz.cloudydemo.html">&lt;uuid&gt;@pythonrox-mydomain.apps.amz.cloudydemo.com</a></p>
+          </div>
+          <aside class="notes">
+Hi, I'm Clayton Coleman, UI lead for OpenShift
+
+I'm going to cover how the pieces of openshift work together.  To make that easier to demonstrate, I'm going to use Steve's application from OpenShift Online on the newly created Enterprise server Matt launched.  I'm going to use our snapshot command to export the code and data from his application and restore it into the cloudydemo OpenShift system.
+
+TO CLI
+
+I'm jumping over to my command line - i'll be using the OpenShift client tools to create a new app. The client tools talk to a REST API on the OpenShift broker (the server), where the persistent state for my app will live.  The broker notifies our DNS server that a new endpoint is available, and then provisions my application onto a node via our messaging bus.
+
+You can see that the application is now updated - and it's got the data that steve created earlier.
+
+BACK TO SLIDE
+
+Each application in OpenShift supports SSH access - and I'll log into my application now so you can see it from a user's perspective.
+
+TO CLI
+</aside>
+        </section>
+
+        <section>
+          <h3 class="">App Topology</h3>
+          <p><em>(each box is a gear)</em></p>
+          <table class="list-tyles">
+            <tr>
+              <td>Simple PHP</td>
+              <td><ul class="unstyled inline">
+                <li class="box">PHP
+              </ul></td>
+            </tr>
+            <tr>
+              <td>With Mongo</td>
+              <td><ul class="unstyled inline">
+                <li class="box">PHP
+                <li class="box box-store">MongoDB
+              </ul></td>
+            </tr>
+            <tr>
+              <td>Web Scaling</td>
+              <td><ul class="unstyled inline">
+                <li class="box">
+                  <span class="box-section box-section-top">HAProxy</span>
+                  PHP
+                <li>...
+                <li class="box">PHP
+                <li class="box box-store">MongoDB
+              </ul></td>
+            </tr>
+          </table>
+          <aside class="notes">
+            Because we created such a simple application, we only had the need of a single gear.  More complex applications can and will use more gears.  For example, when I add MongoDB to an application, I might deploy it onto a second gear, and if I use the scaling feature of the application the first web gear will get a copy of HAProxy installed, and then extra web gears will get created and destroyed as necessary to handle your application traffic.  
+          </aside>
+        </section>
+
+        <section style="transition: none;">
+          <h3 class="">Big Picture</h3>
+          <img class="simple" src="pics/openshift_logo_large.gif">
+          <aside class="notes">
+            Now that we've seen some of how openshift protects applications at the node level, let's step back to talk about how OpenShift is structured. Since ultimately we're judged on the uptime of the applications within OpenShift, we like to remind ourselves of a particular childhood lesson:
+          </aside>
+        </section>
+        <section style="transition: none;">
+          <h3 class="">Big Picture</h3>
+          <img class="simple" src="pics/openshift_logo_change.gif">
+          <p class="fragment">Lesson: Avoid single point of failure</p>
+          <aside class="notes">
+
+            Even the biggest engineering projects can be brought low by small oversights.
+
+            Obviously no one is perfect, but it has helped inform some of the choices we've made:
+        </section>
+
+        <section>
+          <h3 class="">Philosphies</h3>
+          <ul>
+            <li>Two tiers - management / apps
+            <li>Scale independently
+            <li>Limit cross tier traffic
+            <li>Do expensive stuff on gears
+          </ul>
+          <aside class="notes">
+            pause, move to next slide
+          </aside>
+        </section>
+
+        <section>
+          <ul class="diagram-layers unstyled">
+            <li class="transition-below">
+              <div class="layer-info">Management HTTP Traffic</div>
+            </li>
+            <li>
+              <ul class="unstyled inline">
+                <li class="box">
+                  <span class="box-section box-section-top box-interface">Rest API</span>
+                  Broker 1
+                <li class="">...
+                <li class="box">
+                  <span class="box-section box-section-top box-interface">Rest API</span>
+                  Broker N
+                <li class="arrow">&lt;=&gt;
+                <li class="box box-store">MongoDB</li>
+              </ul>
+            </li>
+            <li>
+              <div class="box box-interface">Messaging Bus</div>
+            </li>
+            <li>
+              <ul class="unstyled inline">
+                <li class="box">Node 1
+                <li class="box">Node 2
+                <li class="box">Node 3
+                <li class="">...
+                <li class="box">Node N
+              </ul>
+            </li>
+            <li class="transition-above">
+              <div class="layer-info">Application Traffic (HTTP, SSH)</div>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <ul class="diagram-layers unstyled">
+            <li>
+              <div class="box">
+                <ul class="box-section box-section-top box-interface box-section-row unstyled">
+                  <li>Message Bus
+                  <li>Admin SSH
+                </ul>
+                <h4>Node 1</h4>
+                <ul class="unstyled inline">
+                  <li class="box box-green">Gear 1
+                    <div class="box-section box-interface box-section-bottom">httpd</div>
+                  <li class="box">Gear 2
+                    <div class="box-section box-interface box-section-bottom">httpd</div>
+                  <li class="box">Gear 3
+                    <div class="box-section box-interface box-section-bottom">httpd</div>
+                  <li class="">...
+                  <li class="box">Gear N
+                    <div class="box-section box-interface box-section-bottom">httpd</div>
+                </ul>
+                <ul class="box-section box-section-bottom box-interface box-section-row unstyled">
+                  <li>httpd
+                </ul>
+              </div>
+            </li>
+          </ul>
+          <ol>
+            <li>App DNS records point to this node's IP
+            <li>Apache routes vhost for app to gear 1
+          </ol>
+        </section>
+
+        <section>
+          <ul class="diagram-layers unstyled">
+            <li>
+              <div class="box">
+                <ul class="box-section box-section-top box-interface box-section-row unstyled">
+                  <li>Message Bus
+                  <li>Admin SSH
+                </ul>
+                <h4>Node 1</h4>
+                <ul class="unstyled inline">
+                  <li class="box box-green">Gear 1
+                    <div class="box-section box-interface box-section-middle">httpd</div>
+                    <div class="box-section box-interface box-section-bottom">HAProxy</div>
+                  <li class="box">Gear 2
+                    <div class="box-section box-interface box-section-bottom">httpd</div>
+                  <li class="box box-green">Gear 3
+                    <div class="box-section box-interface box-section-bottom">httpd</div>
+                  <li class="">...
+                  <li class="box">Gear N
+                    <div class="box-section box-interface box-section-bottom">httpd</div>
+                </ul>
+                <ul class="box-section box-section-bottom box-interface box-section-row unstyled">
+                  <li>httpd
+                </ul>
+              </div>
+            </li>
+          </ul>
+          <ol>
+            <li>Gear 1 still serves vhost requests for the app
+            <li>HAProxy routes from Gear 1 to Gear 3 + others
+        </ol>
+        </section>
+
+
+        <section>
+          <h3 class="comic">Where am I?</h3>
+          <p>(Vegas, baby)</p>
+          <div class="fragment">
+            <hr>
+            <p>I'm on a gear
+            <p>Gear is container for parts of my app
+          </div>
+          <div class="fragment">
+            <p>One app can utilize many gears
+            <p>One node can run many gears
+          </div>
+          <aside class="notes">
+
+In openshift, when you SSH into your application you're actually accessing a Gear, which is just a container for your code and processes.  OpenShift hosts multiple gears on the same node - and those gears might be from many different types of users.  The user Id part of the SSH request is actually what we call the gear unique id and it maps to a real user on this system.  When you try to log in with SSH, OpenShift checks that your private key matches one of the of the public keys you've associated with your account.  We don't yet support multiple users accessing the same application via the UI, but you can give another developer access to your Git repository over SSH by adding their public key to your account.
+
+pwd
+
+When you log into the machine, you'll see that your starting directory has the same identifier as the user - that's your gear id.  
+
+ls -l
+
+You can see that the content in this directory is owned by either root, or my gear.  You can see the Git repository, a directory containing the static runtime components of the python cartridge, and the app-root dir, which will contain any data you write to disk as well as the runtime copy of your git repository.  When you push code to OpenShift, we'll make a copy of the latest contents of the repo and put them in app-root - this also means that if you change the files on the gear a subsequent push will reset them.
+
+uname -a
+
+If we poke around some more you can see that the system identifies itself as node.demo.cloudydemo.com, which is one of the machines that Matt's cloudformation created.
+
+pstree
+
+I also have just a few processes - httpd (which runs WSGI and Python) and is listening for incoming requests to the gear.
+
+BACK TO SLIDE
+
+Each gear runs on a node (as you saw from the uname), and each node can run many gears.  Also, each application may be composed of multiple gears, such as when you are scaling your web app horizontally, or if you're running a database or other service.
+          </aside>
+        </section>
+
+        <section>
+          <h3 class="">What can I do?</h3>
+          <div class="fragment">
+            <img src="pics/make_me_a_sandwich.png">
+            <p>(apologies to XKCD)</p>
+          </div>
+          <aside class="notes">
+            Within a gear, an important question is what can I do?  We want developers to have the flexibility to use libraries and solutions that are parts of a standard linux system, and we don't want to unnecessarily cage users into a proscribed list of technologies.  The flip side of that is of course security - in order to protect applications from each other, there have to be some limits in place.  And knowing developers, we always expect them to press their limits.
+
+            Fortunately within the Linux ecosystem there are technologies that allow us to place reasonable limits on users while preserving their freedom to act.
+          </aside>
+        </section>
+
+        <section>
+          <h3 class="">Secure Multitenancy</h3>
+          <ol>
+            <li>Isolate userspaces from each other (Namespaces/MCS)
+            <li>Whitelist allowable actions (SELinux)
+            <li>Limit CPU and memory use (CGroups)
+            <li>Separate app needs from platform (ACLs)
+          </ol>
+          <aside class="notes">
+
+In OpenShift we use a combination of SELinux and MCS labels, Kernel namespaces, CGroups, and standard Unix permissions and users to provide those benefits.
+
+When a user starts an SSH session, we use kernel namespaces to completely isolate their processes from both root and other users. Those processes also run in a new MCS category, which prevents users from accessing other content outside of their category (the content belonging to other users). Our SELinux policy, along with our MCS categories, ensures that only known "safe" operations can be performed within the container.  CGroups ensures that each gear gets a fair share of CPU time, and standard Unix permissions and user restrictions reduce the potential for self-inflicted harm.
+
+          </aside>
+        </section>
+
+        <section>
+          <h3 class="comic">Show me the Node</h3>
+          <ul>
+            <li>Where content lives
+            <li>Each user gets an MCS category
+            <li>Gear profiles and CGroups
+            <li>SELinux policy
+            <li>Node level commands
+            <li>Disk performance
+            <li>Backup the /var/lib/openshift directories
+          </ul>
+          <aside class="notes">
+what we allow, quick screen share
+
+TO CLI
+
+Let's look at OpenShift from the perspective of the admin now by logging into the node that is hosting the gear my application runs on.  
+
+ssh node.demo.cloudydemo.com (amz)
+
+All of the gears live under /var/lib/openshift like you saw before.  I don't own much - the content I need to update is mine, and the rest remains under the control of root. My Unix user corresponds to the privilge group and container I run in.
+
+cd gear
+
+ls -Z
+
+Within my gear, all of the content is assigned a specific MCS category - if I add another gear, another label will be created.  MCS ensures ???
+
+// Show memory
+// trigger selinux, dig?
+
+ssh node
+sestatus -v
+
+ssh app
+sestatus -v
+
+// SSH to box, poke CGroup?
+find /cgroup/all -name memory.limit_in_bytes | xargs cat
+find /cgroup/all -name cpu.shares | xargs cat
+
+Now obviously not all applications and processes are equal - to account for this OpenShift uses a "gear profile".  On OpenShift.redhat.com, the profiles are small, medium, and large, and correspond to increased CPU and memory limits.  In an IT deployment of OpenShift Enterprise, it's likely that applications will have more diverse needs.  As an administrator, it's easy to set a custom CGroup set and tie that to a specific gear profile, and to enable certain users the ability to create an application with that gear profile.
+
+oo-&lt;tab&gt;
+
+Disk limits via quota
+oo-get-quota -c 0ed54bb927cc49ca8bae6c9443e35527
+
+// restart gear
+ssh node
+sestatus -b
+
+Always have a whitelist approach - openshift hosted service demonstrates what we need, and we review and filter those needs into updated policies.  Lots of good PaaS practical experience has been earned and pushed back into upstream.
+          </aside>
+        </section>
+
+        <section>
+          <h3 class="comic">My Brain Hurts</h3>
+          <ul>
+            <li>Play online now <a href="https://openshift.redhat.com/">openshift.redhat.com</a>
+            <li>Use <a href="index.html">these slides</a> as reference
+            <li>Find us in our booth - 107
+            <li>Want to buy?  Come to the booth!
+          </ul>
+          <h4 style="margin-top: 70px">Thanks!</h4>
+        </section>
+
+    <section>
+      <h3>Attributions</h3>
+      <p>Clouds - http://www.flickr.com/photos/dotcompals/3449854626</p>
+      <p>Introduction - http://www.flickr.com/photos/alville/4513533483</p>
+      <p>Twitter - http://www.flickr.com/photos/rosauraochoa/3419823308</p>
+      <p>Make me a sandwich - inspired by http://xkcd.com/149/</p>
+      <p>Big Picture - inspired by Imperial Death Star</p>
+    </section>
+
+  </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.min.js"></script>
+
+<script>
+
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+  controls: true,
+  progress: true,
+  history: true,
+
+  theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+  transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+  // Optional libraries used to extend on reveal.js
+  dependencies: [
+    { src: 'lib/js/highlight.js', async: true, callback: function() { window.hljs.initHighlightingOnLoad(); } },
+    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+    { src: 'lib/js/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'lib/js/data-markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+  ]
+});
+</script>
+
+<div class="footer" class="share-reveal" style="position: absolute; bottom: 6px; left: 50%; margin-left: -140px; z-index: 20;">
+  <p>Google Cloud Platform - Tapan Banker</p>
+</div>
+</body>
+
+<!-- Mirrored from aws2012-claytondev.rhcloud.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 14 Jan 2018 04:03:50 GMT -->
+</html>
